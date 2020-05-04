@@ -1,9 +1,7 @@
 package main
 
+import "github.com/byroni/gomunk/cmd"
+
 func main() {
-	path := "./testFile.txt"
-
-	client := NewGoMunk(path)
-
-	client.UploadFile()
+	cmd.Execute()
 }
