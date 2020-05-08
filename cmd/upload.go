@@ -17,14 +17,14 @@ var upload = &cobra.Command{
 	Short:   "Upload a file to personal s3 bucket",
 	Example: "gomunk upload path/to/file.txt",
 	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) <= 1 {
-			return errors.New("Missing file path")
+		if len(args) < 1 {
+			return errors.New("missing file path\n")
 		}
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, v := range args {
-			client := gm.NewGoMunkUpload(v)
+			client := gm.GoMunkUpload(v)
 			client.UploadFile()
 		}
 	},

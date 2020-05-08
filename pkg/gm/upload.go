@@ -10,35 +10,32 @@ import (
 )
 
 // NewGoMunk creates a new GoMunkUpload client
-func NewGoMunkUpload(path string) *GoMunkUpload {
-	return &GoMunkUpload{
+func GoMunkUpload(path string) *goMunkUpload {
+	return &goMunkUpload{
 		path:    path,
 		keyName: filepath.Base(path),
 	}
 }
 
 // GoMunkUpload type struct
-type GoMunkUpload struct {
+type goMunkUpload struct {
 	path    string
 	keyName string
 }
 
 // UploadFile uploads a file
-func (gm *GoMunkUpload) UploadFile() {
-	bucket := "gomunk-file-store"
-
+func (gm *goMunkUpload) UploadFile() {
 	file, err := gm.OpenFile(gm.path)
 	if err != nil {
 		log.Fatal("Unable to locate file", err)
 	}
 	defer file.Close()
 
-	fmt.Println("Uploading file:", gm.path)
-	uploader := aws.NewUploader(aws.NewSession())
+	fmt.Printf("Uploading file: %s...\n", gm.path)
 
-	options := aws.UploadInput(&bucket, &gm.path, file)
+	client := aws.GoMunkS3()
 
-	_, err = uploader.Upload(options)
+	_, err = client.UploadFile(gm.path, file)
 	if err != nil {
 		panic(err)
 	}
@@ -47,7 +44,7 @@ func (gm *GoMunkUpload) UploadFile() {
 }
 
 // OpenFile is a utility function that opens a file for reading
-func (gm *GoMunkUpload) OpenFile(filePath string) (*os.File, error) {
+func (gm *goMunkUpload) OpenFile(filePath string) (*os.File, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return file, err

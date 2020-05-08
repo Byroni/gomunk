@@ -3,6 +3,6 @@ package gm
 import "github.com/byroni/gomunk/pkg/aws"
 
 func Get(key string) {
-	session := aws.NewSession()
-	aws.Get(session, key)
+	client := aws.GoMunkS3()
+	client.Get(key)
 }
