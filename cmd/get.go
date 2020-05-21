@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/byroni/gomunk/pkg/gm"
+	"github.com/byroni/gomunk/pkg/gomunk"
 	"github.com/spf13/cobra"
 )
 
@@ -15,6 +15,9 @@ var get = &cobra.Command{
 	Example: "gomunk get",
 	Run: func(cmd *cobra.Command, args []string) {
 		key := args[0]
-		gm.Get(key)
+
+		fileStore := gomunk.AWSFileStore()
+
+		fileStore.GetFile(key)
 	},
 }

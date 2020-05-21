@@ -87,8 +87,7 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-.idea
-
+.idea/
 # Editor-based Rest Client
 .idea/httpRequests
 
@@ -114,3 +113,4 @@ fabric.properties
 .idea/**/markdown-navigator/
 
 # End of https://www.gitignore.io/api/go,intellij
+testFile.txt

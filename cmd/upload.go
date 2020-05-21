@@ -3,7 +3,7 @@ package cmd
 import (
 	"errors"
 
-	"github.com/byroni/gomunk/pkg/gm"
+	"github.com/byroni/gomunk/pkg/gomunk"
 
 	"github.com/spf13/cobra"
 )
@@ -24,8 +24,9 @@ var upload = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, v := range args {
-			client := gm.GoMunkUpload(v)
-			client.UploadFile()
+			handler := gomunk.GoMunk("aws")
+
+			handler.UploadFile(v)
 		}
 	},
 }
