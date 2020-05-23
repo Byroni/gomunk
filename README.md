@@ -18,7 +18,16 @@ Your AWS user must have programmatic access and the proper S3 access policy
 ```
 
 ### Configuration setup
-Before you can start using GoMunk, you must set up your configuration file. Create a `config.yml` file in your home directory (`~`).
+Before you can start using GoMunk, you must set up your configuration file. Create a `config.yml` file in the same directory you have your executable.
+If GoMunk cannot find the config file in the executable directory, it will default to the project root. Otherwise, it will exit.
+
+For development, place the config file in the project root folder.
+
+```
+~/
+  gomunk
+  config.yml
+```
 
 #### Configuration options
 | Name | Default | Options | Description | Required |

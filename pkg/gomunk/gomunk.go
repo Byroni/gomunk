@@ -15,21 +15,34 @@ type goMunk struct {
 }
 
 func init() {
+	exe, err := os.Executable()
+	if err != nil {
+		log.Fatal("Could not get executable directory: ", err)
+	}
+
+	exePath := filepath.Dir(exe)
+
+	viper.AddConfigPath(exePath)
 	viper.SetConfigName("config")
-	viper.AddConfigPath(".")
-	viper.AutomaticEnv()
 	viper.SetConfigType("yml")
+	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Error reading config file, %s", err)
-		os.Exit(1)
+		log.Println(err, "Defaulting to project root directly")
+
+		// Look for config file in project root
+		viper.AddConfigPath(".")
+		if err := viper.ReadInConfig(); err != nil {
+			log.Printf("Error reading config file, %s", err)
+			os.Exit(1)
+		}
 	}
 
 	// Set defaults
 	viper.SetDefault("AWS_REGION", "us-east-1")
 	viper.SetDefault("AWS_BUCKET", "gomunk-file-store")
 
-	err := viper.Unmarshal(&Config)
+	err = viper.Unmarshal(&Config)
 	if err != nil {
 		log.Fatalf("Unable to parse configuration, %v", err)
 		os.Exit(1)
