@@ -116,3 +116,6 @@ fabric.properties
 testFile.txt
 
 config.yml
+
+# gomunk executable
+gomunk
