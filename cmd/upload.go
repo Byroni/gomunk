@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"errors"
+	"log"
+	"os"
 
 	"github.com/byroni/gomunk/pkg/gomunk"
 
@@ -24,9 +26,16 @@ var upload = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, v := range args {
-			handler := gomunk.GoMunk("aws")
+			handler, err := gomunk.GoMunk()
+			if err != nil {
+				log.Fatal(err)
+				os.Exit(1)
+			}
 
-			handler.UploadFile(v)
+			if err := handler.UploadFile(v); err != nil {
+				log.Fatal("Unable to upload file:", err)
+				os.Exit(1)
+			}
 		}
 	},
 }

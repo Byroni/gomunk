@@ -1,23 +1,49 @@
 package gomunk
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/spf13/viper"
 )
 
 type goMunk struct {
 	fileStoreHandler FileStoreHandler
 }
 
-func GoMunk(provider string) *goMunk {
-	switch provider {
+func init() {
+	viper.SetConfigName("config")
+	viper.AddConfigPath(".")
+	viper.AutomaticEnv()
+	viper.SetConfigType("yml")
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("Error reading config file, %s", err)
+		os.Exit(1)
+	}
+
+	// Set defaults
+	viper.SetDefault("AWS_REGION", "us-east-1")
+	viper.SetDefault("AWS_BUCKET", "gomunk-file-store")
+
+	err := viper.Unmarshal(&Config)
+	if err != nil {
+		log.Fatalf("Unable to parse configuration, %v", err)
+		os.Exit(1)
+	}
+}
+
+func GoMunk() (*goMunk, error) {
+	switch Config.PROVIDER {
 	case "aws":
 		return &goMunk{
 			fileStoreHandler: AWSFileStore(),
-		}
+		}, nil
 	default:
-		panic(fmt.Errorf("%s", "Must specify valid file store provider"))
+		return &goMunk{}, errors.New("must specify a valid cloud provider. Check if you have PROVIDER set in your configuration file")
 	}
 }
 
@@ -25,10 +51,10 @@ func (gm *goMunk) ListFiles() {
 	gm.fileStoreHandler.ListFiles()
 }
 
-func (gm *goMunk) UploadFile(path string) {
+func (gm *goMunk) UploadFile(path string) error {
 	file, err := os.Open(path)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer file.Close()
 
@@ -38,8 +64,9 @@ func (gm *goMunk) UploadFile(path string) {
 
 	err = gm.fileStoreHandler.UploadFile(key, file)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	fmt.Println("Uploaded file to file store")
+	return nil
 }

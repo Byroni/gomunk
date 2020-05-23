@@ -7,10 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
-
-}
-
 var root = &cobra.Command{
 	Use:   "gomunk",
 	Short: "GoMunk is a personal file store and file transfer utility",

@@ -9,7 +9,7 @@ func TestFailedNewHandler(t *testing.T) {
 			t.Errorf(`GoMunk(%q) did not panic`, provider)
 		}
 	}()
-	GoMunk(provider)
+	GoMunk()
 }
 
 func TestNewHandler(t *testing.T) {
@@ -19,5 +19,5 @@ func TestNewHandler(t *testing.T) {
 			t.Errorf(`GoMunk(%q) failed to panic`, provider)
 		}
 	}()
-	GoMunk(provider)
+	GoMunk()
 }

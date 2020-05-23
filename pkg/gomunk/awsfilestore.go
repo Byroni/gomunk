@@ -21,7 +21,7 @@ type awsFileStore struct {
 func AWSFileStore() FileStoreHandler {
 	// Get bucket from config by default and allow override by flag
 	return &awsFileStore{
-		bucket: "gomunk-file-store",
+		bucket: Config.AWS_BUCKET,
 	}
 }
 
@@ -41,15 +41,15 @@ func (fs *awsFileStore) UploadFile(key string, body *os.File) error {
 
 	uploader := s3manager.NewUploader(session)
 
-	output, err := uploader.Upload(input)
+	_, err = uploader.Upload(input)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Upload ID: %s", output.UploadID)
+
 	return nil
 }
 
-func (fs *awsFileStore) GetFile(path string) {
+func (fs *awsFileStore) GetFile(path string) error {
 	input := &s3.GetObjectInput{
 		Bucket: aws.String(fs.bucket),
 		Key:    aws.String(path),
@@ -59,23 +59,25 @@ func (fs *awsFileStore) GetFile(path string) {
 		Region: aws.String("us-east-1"),
 	})
 	if err != nil {
-		panic(err)
+		return err
 	}
 	s3Session := s3.New(session)
 	result, err := s3Session.GetObject(input)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	file, err := ioutil.ReadAll(result.Body)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	err = ioutil.WriteFile(filepath.Base(filepath.Base(path)), file, 0644)
 	if err != nil {
-		panic(err)
+		return err
 	}
+
+	return nil
 }
 
 func (fs *awsFileStore) ListFiles() {
@@ -85,7 +87,7 @@ func (fs *awsFileStore) ListFiles() {
 	}
 
 	session, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-east-1"),
+		Region: aws.String(Config.AWS_REGION),
 	})
 	if err != nil {
 		panic(err)

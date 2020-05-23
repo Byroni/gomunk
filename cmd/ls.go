@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"log"
+	"os"
+
 	"github.com/byroni/gomunk/pkg/gomunk"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +17,11 @@ var ls = &cobra.Command{
 	Short:   "List objects in bucket",
 	Example: "gomunk ls",
 	Run: func(cmd *cobra.Command, args []string) {
-		handler := gomunk.GoMunk("aws")
+		handler, err := gomunk.GoMunk()
+		if err != nil {
+			log.Fatal(err)
+			os.Exit(1)
+		}
 		handler.ListFiles()
 	},
 }

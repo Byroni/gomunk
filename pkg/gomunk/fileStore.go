@@ -4,6 +4,6 @@ import "os"
 
 type FileStoreHandler interface {
 	UploadFile(string, *os.File) error
-	GetFile(string)
+	GetFile(string) error
 	ListFiles()
 }

@@ -1,0 +1,3 @@
+PROVIDER: "aws"
+AWS_REGION: "us-east-1"
+AWS_BUCKET: "gomunk-file-store"
