@@ -1,4 +1,4 @@
-# gomunk
+![GoMunk Logo](logo.png)
 
 GoMunk is a CLI tool written in Go for uploading and managing files to a personal file store
 
